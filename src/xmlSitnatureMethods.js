@@ -2,10 +2,7 @@
 // NOTE Imports
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import  {
-  XML_DSIG_GOST,
-  CADESCOM
-} from ('./constants');
+import { XML_DSIG_GOST, CADESCOM } from "./constants";
 
 const {
   XmlDsigGost2012Url256,
@@ -13,13 +10,13 @@ const {
   XmlDsigGost2012Url512,
   XmlDsigGost2012Url512Digest,
   XmlDsigGost3410Url,
-  XmlDsigGost3411Url,
-} = XML_DSIG_GOST
+  XmlDsigGost3411Url
+} = XML_DSIG_GOST;
 
 const {
   CADESCOM_XML_SIGNATURE_TYPE_ENVELOPED,
   CADESCOM_XML_SIGNATURE_TYPE_ENVELOPING,
-  CADESCOM_XML_SIGNATURE_TYPE_TEMPLATE,
+  CADESCOM_XML_SIGNATURE_TYPE_TEMPLATE
 } = CADESCOM;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,7 +35,7 @@ function template(signAlgorithm) {
   return function doHashAlgorithm(hashAlgorithm) {
     return {
       signAlgorithm,
-      hashAlgorithm,
+      hashAlgorithm
     };
   };
 }
@@ -60,16 +57,16 @@ function doXmlSitnatureType(CADESCOM_XML_SIGNATURE_TYPE) {
       // Оборачивающая подпись
       return CADESCOM_XML_SIGNATURE_TYPE_ENVELOPING;
 
-      /**
-       * @todo тип подписи CADESCOM_XML_SIGNATURE_TYPE_TEMPLATE на данном этапе не поддерживается
-       * @description при выдове данного пипа будет ошибка
-       */
+    /**
+     * @todo тип подписи CADESCOM_XML_SIGNATURE_TYPE_TEMPLATE на данном этапе не поддерживается
+     * @description при выдове данного пипа будет ошибка
+     */
     case 2:
       // Подпись по шаблону
       return CADESCOM_XML_SIGNATURE_TYPE_TEMPLATE;
 
     default:
-      throw new Error('Тип подписи не поддерживается');
+      throw new Error("Тип подписи не поддерживается");
   }
 }
 
@@ -82,20 +79,22 @@ function doXmlSitnatureType(CADESCOM_XML_SIGNATURE_TYPE) {
  */
 function doXmlSitnatureAlgorithm(value) {
   switch (value) {
-    case '1.2.643.2.2.19':
+    case "1.2.643.2.2.19":
       // алгоритм ГОСТ Р 34.10-2001
       return template(XmlDsigGost3410Url)(XmlDsigGost3411Url);
 
-    case '1.2.643.7.1.1.1.1':
+    case "1.2.643.7.1.1.1.1":
       // алгоритм ГОСТ Р 34.10-2012 256 бит
       return template(XmlDsigGost2012Url256)(XmlDsigGost2012Url256Digest);
 
-    case '1.2.643.7.1.1.1.2':
+    case "1.2.643.7.1.1.1.2":
       // алгоритм ГОСТ Р 34.10-2012 512 бит
       return template(XmlDsigGost2012Url512)(XmlDsigGost2012Url512Digest);
 
     default:
-      throw new Error('Сертификат не соответствует ГОСТ Р 34.10-2012 (256 или 512 бит) или ГОСТ Р 34.10-2001');
+      throw new Error(
+        "Сертификат не соответствует ГОСТ Р 34.10-2012 (256 или 512 бит) или ГОСТ Р 34.10-2001"
+      );
   }
 }
 
@@ -103,7 +102,4 @@ function doXmlSitnatureAlgorithm(value) {
 // NOTE Exports
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export {
-  doXmlSitnatureType,
-  doXmlSitnatureAlgorithm,
-};
+export { doXmlSitnatureType, doXmlSitnatureAlgorithm };
