@@ -28,7 +28,7 @@ const cadespluginOnload = (async function cadespluginOnload() {
       signBase64,
       verifyBase64,
       signXml,
-      about,
+      about
     };
   } catch (error) {
     throw new Error(error);
@@ -39,4 +39,4 @@ const cadespluginOnload = (async function cadespluginOnload() {
 // NOTE Exports
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-module.exports = cadespluginOnload;
+export default cadespluginOnload;
