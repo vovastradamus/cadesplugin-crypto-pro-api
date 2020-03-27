@@ -92,16 +92,16 @@ cadesMethods.oAbout = function oAbout() {
 const cadescomMethods = Object.create(cadesMethods);
 
 cadescomMethods.init({
-  O_STORE: 'CAdESCOM.Store',
-  O_ATTS: 'CADESCOM.CPAttribute',
-  O_SIGNED_DATA: 'CAdESCOM.CadesSignedData',
-  O_SIGNER: 'CAdESCOM.CPSigner',
-  O_SIGNED_XML: 'CAdESCOM.SignedXML',
-  O_ABOUT: 'CAdESCOM.About',
+  O_STORE: "CAdESCOM.Store",
+  O_ATTS: "CADESCOM.CPAttribute",
+  O_SIGNED_DATA: "CAdESCOM.CadesSignedData",
+  O_SIGNER: "CAdESCOM.CPSigner",
+  O_SIGNED_XML: "CAdESCOM.SignedXML",
+  O_ABOUT: "CAdESCOM.About"
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // NOTE Exports
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-module.exports = cadescomMethods;
+export default cadescomMethods;

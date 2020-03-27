@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   /**
    * @constant {Number} CAPICOM_LOCAL_MACHINE_STORE Локальное хранилище компьютера.
    */
@@ -10,7 +10,7 @@ module.exports = {
   /**
    * @constant {String} CAPICOM_MY_STORE Хранилище персональных сертификатов пользователя.
    */
-  CAPICOM_MY_STORE: 'My',
+  CAPICOM_MY_STORE: "My",
   /**
    * @constant {Number} CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED
    * Открывает хранилище на чтение/запись, если пользователь имеет права на чтение/запись.
@@ -154,5 +154,5 @@ module.exports = {
   /**
    * @constant {Number} CAPICOM_AUTHENTICATED_ATTRIBUTE_SIGNING_TIME Время подписи.
    */
-  CAPICOM_AUTHENTICATED_ATTRIBUTE_SIGNING_TIME: 0,
+  CAPICOM_AUTHENTICATED_ATTRIBUTE_SIGNING_TIME: 0
 };

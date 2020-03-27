@@ -17,7 +17,15 @@ const CertificateAdjuster = Object.create(null);
  * @description конструктор
  */
 CertificateAdjuster.init = function init(currentCert) {
-  const { certApi, issuerInfo, privateKey, serialNumber, thumbprint, subjectInfo, validPeriod } = currentCert;
+  const {
+    certApi,
+    issuerInfo,
+    privateKey,
+    serialNumber,
+    thumbprint,
+    subjectInfo,
+    validPeriod
+  } = currentCert;
 
   this.certApi = certApi;
   this.issuerInfo = issuerInfo;
@@ -37,19 +45,19 @@ CertificateAdjuster.init = function init(currentCert) {
  */
 CertificateAdjuster.friendlyInfo = function friendlyInfo(subjectIssuer) {
   if (!this[subjectIssuer]) {
-    throw new Error('Не верно указан аттрибут');
+    throw new Error("Не верно указан аттрибут");
   }
 
-  const subjectIssuerArr = this[subjectIssuer].split(', ');
+  const subjectIssuerArr = this[subjectIssuer].split(", ");
   const _possibleInfo = this.possibleInfo(subjectIssuer);
   const formedSubjectIssuerInfo = subjectIssuerArr.map(tag => {
-    const tagArr = tag.split('=');
+    const tagArr = tag.split("=");
     const index = `${tagArr[0]}=`;
 
     return {
       code: tagArr[0],
       text: tagArr[1],
-      value: _possibleInfo[index],
+      value: _possibleInfo[index]
     };
   });
 
@@ -62,7 +70,7 @@ CertificateAdjuster.friendlyInfo = function friendlyInfo(subjectIssuer) {
  * @description возвращает распаршенную информацию о строке subjectInfo
  */
 CertificateAdjuster.friendlySubjectInfo = function friendlySubjectInfo() {
-  return this.friendlyInfo('subjectInfo');
+  return this.friendlyInfo("subjectInfo");
 };
 
 /**
@@ -71,7 +79,7 @@ CertificateAdjuster.friendlySubjectInfo = function friendlySubjectInfo() {
  * @description возвращает распаршенную информацию о строке issuerInfo
  */
 CertificateAdjuster.friendlyIssuerInfo = function friendlyIssuerInfo() {
-  return this.friendlyInfo('issuerInfo');
+  return this.friendlyInfo("issuerInfo");
 };
 
 /**
@@ -84,7 +92,7 @@ CertificateAdjuster.friendlyValidPeriod = function friendlyValidPeriod() {
 
   return {
     from: this.friendlyDate(from),
-    to: this.friendlyDate(to),
+    to: this.friendlyDate(to)
   };
 };
 
@@ -97,40 +105,40 @@ CertificateAdjuster.friendlyValidPeriod = function friendlyValidPeriod() {
  */
 CertificateAdjuster.possibleInfo = function possibleInfo(subjectIssuer) {
   const attrs = {
-    'UnstructuredName=': 'Неструктурированное имя',
-    'E=': 'Email',
-    'C=': 'Страна',
-    'S=': 'Регион',
-    'L=': 'Город',
-    'STREET=': 'Адрес',
-    'O=': 'Компания',
-    'T=': 'Должность',
-    'ОГРНИП=': 'ОГРНИП',
-    'OGRNIP=': 'ОГРНИП',
-    'SNILS=': 'СНИЛС',
-    'СНИЛС=': 'СНИЛС',
-    'INN=': 'ИНН',
-    'ИНН=': 'ИНН',
-    'ОГРН=': 'ОГРН',
-    'OGRN=': 'ОГРН',
+    "UnstructuredName=": "Неструктурированное имя",
+    "E=": "Email",
+    "C=": "Страна",
+    "S=": "Регион",
+    "L=": "Город",
+    "STREET=": "Адрес",
+    "O=": "Компания",
+    "T=": "Должность",
+    "ОГРНИП=": "ОГРНИП",
+    "OGRNIP=": "ОГРНИП",
+    "SNILS=": "СНИЛС",
+    "СНИЛС=": "СНИЛС",
+    "INN=": "ИНН",
+    "ИНН=": "ИНН",
+    "ОГРН=": "ОГРН",
+    "OGRN=": "ОГРН"
   };
 
   switch (subjectIssuer) {
-    case 'subjectInfo':
-      attrs['SN='] = 'Фамилия';
-      attrs['G='] = 'Имя/Отчество';
-      attrs['CN='] = 'Владелец';
-      attrs['OU='] = 'Отдел/подразделение';
+    case "subjectInfo":
+      attrs["SN="] = "Фамилия";
+      attrs["G="] = "Имя/Отчество";
+      attrs["CN="] = "Владелец";
+      attrs["OU="] = "Отдел/подразделение";
 
       return attrs;
-    case 'issuerInfo':
-      attrs['CN='] = 'Удостоверяющий центр';
-      attrs['OU='] = 'Тип';
+    case "issuerInfo":
+      attrs["CN="] = "Удостоверяющий центр";
+      attrs["OU="] = "Тип";
 
       return attrs;
 
     default:
-      throw new Error('Не верно указан кейс получаемых данных');
+      throw new Error("Не верно указан кейс получаемых данных");
   }
 };
 
@@ -142,12 +150,20 @@ CertificateAdjuster.possibleInfo = function possibleInfo(subjectIssuer) {
  */
 CertificateAdjuster.friendlyDate = function friendlyDate(date) {
   const newDate = new Date(date);
-  const [day, month, year] = [newDate.getDate(), newDate.getMonth() + 1, newDate.getFullYear()];
-  const [hours, minutes, seconds] = [newDate.getHours(), newDate.getMinutes(), newDate.getSeconds()];
+  const [day, month, year] = [
+    newDate.getDate(),
+    newDate.getMonth() + 1,
+    newDate.getFullYear()
+  ];
+  const [hours, minutes, seconds] = [
+    newDate.getHours(),
+    newDate.getMinutes(),
+    newDate.getSeconds()
+  ];
 
   return {
     ddmmyy: `${day}/${month}/${year}`,
-    hhmmss: `${hours}:${minutes}:${seconds}`,
+    hhmmss: `${hours}:${minutes}:${seconds}`
   };
 };
 
@@ -164,7 +180,9 @@ CertificateAdjuster.isValid = async function isValid() {
 
     return await isValid.Result;
   } catch (error) {
-    throw new Error(`Произошла ошибка при проверке валидности сертификата: ${error.message}`);
+    throw new Error(
+      `Произошла ошибка при проверке валидности сертификата: ${error.message}`
+    );
   }
 };
 
@@ -172,4 +190,4 @@ CertificateAdjuster.isValid = async function isValid() {
 // NOTE Exports
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-module.exports = CertificateAdjuster;
+export default CertificateAdjuster;

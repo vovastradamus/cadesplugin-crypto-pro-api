@@ -2,23 +2,31 @@
 // NOTE Imports
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const CertificateAdjuster = require('./сertificateAdjuster');
-const cadescomMethods = require('./cadescomMethods');
-const { doXmlSitnatureAlgorithm, doXmlSitnatureType } = require('./xmlSitnatureMethods');
+import CertificateAdjuster from "./сertificateAdjuster";
+import cadescomMethods from "./cadescomMethods";
+import {
+  doXmlSitnatureAlgorithm,
+  doXmlSitnatureType
+} from "./xmlSitnatureMethods";
+import { CAPICOM, CADESCOM } from "./constants";
+
 const {
-  CAPICOM: {
-    CAPICOM_CURRENT_USER_STORE,
-    CAPICOM_MY_STORE,
-    CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED,
-    CAPICOM_CERTIFICATE_FIND_SHA1_HASH,
-    CAPICOM_CERTIFICATE_FIND_TIME_VALID,
-    CAPICOM_CERTIFICATE_FIND_EXTENDED_PROPERTY,
-    CAPICOM_PROPID_KEY_PROV_INFO,
-    CAPICOM_AUTHENTICATED_ATTRIBUTE_SIGNING_TIME,
-    CAPICOM_CERTIFICATE_INCLUDE_END_ENTITY_ONLY,
-  },
-  CADESCOM: { CADESCOM_BASE64_TO_BINARY, CADESCOM_CADES_BES, CADESCOM_XML_SIGNATURE_TYPE_ENVELOPED },
-} = require('./constants');
+  CAPICOM_CURRENT_USER_STORE,
+  CAPICOM_MY_STORE,
+  CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED,
+  CAPICOM_CERTIFICATE_FIND_SHA1_HASH,
+  CAPICOM_CERTIFICATE_FIND_TIME_VALID,
+  CAPICOM_CERTIFICATE_FIND_EXTENDED_PROPERTY,
+  CAPICOM_PROPID_KEY_PROV_INFO,
+  CAPICOM_AUTHENTICATED_ATTRIBUTE_SIGNING_TIME,
+  CAPICOM_CERTIFICATE_INCLUDE_END_ENTITY_ONLY
+} = CAPICOM;
+
+const {
+  CADESCOM_BASE64_TO_BINARY,
+  CADESCOM_CADES_BES,
+  CADESCOM_XML_SIGNATURE_TYPE_ENVELOPED
+} = CADESCOM;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // NOTE Functions
@@ -46,15 +54,21 @@ async function about() {
 async function getCertsList() {
   try {
     const oStore = await cadescomMethods.oStore();
-    await oStore.Open(CAPICOM_CURRENT_USER_STORE, CAPICOM_MY_STORE, CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED);
+    await oStore.Open(
+      CAPICOM_CURRENT_USER_STORE,
+      CAPICOM_MY_STORE,
+      CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED
+    );
 
     const certificates = await oStore.Certificates;
 
     if (!certificates) {
-      throw new Error('Нет доступных сертификатов');
+      throw new Error("Нет доступных сертификатов");
     }
 
-    const findCertificate = await certificates.Find(CAPICOM_CERTIFICATE_FIND_TIME_VALID);
+    const findCertificate = await certificates.Find(
+      CAPICOM_CERTIFICATE_FIND_TIME_VALID
+    );
     const findCertsWithPrivateKey = await findCertificate.Find(
       CAPICOM_CERTIFICATE_FIND_EXTENDED_PROPERTY,
       CAPICOM_PROPID_KEY_PROV_INFO
@@ -63,7 +77,7 @@ async function getCertsList() {
     const count = await findCertsWithPrivateKey.Count;
 
     if (!count) {
-      throw new Error('Нет сертификатов с приватным ключём');
+      throw new Error("Нет сертификатов с приватным ключём");
     }
 
     const countArray = Array(count).fill(null);
@@ -92,13 +106,15 @@ async function getCertsList() {
             thumbprint: await certApi.Thumbprint,
             validPeriod: {
               from: await certApi.ValidFromDate,
-              to: await certApi.ValidToDate,
-            },
+              to: await certApi.ValidToDate
+            }
           });
 
           return сertificateAdjuster;
         } catch (error) {
-          throw new Error(`При переборе сертификатов произошла ошибка: ${error.message}`);
+          throw new Error(
+            `При переборе сертификатов произошла ошибка: ${error.message}`
+          );
         }
       })
     );
@@ -121,24 +137,33 @@ async function getCertsList() {
 async function currentCadesCert(thumbprint) {
   try {
     if (!thumbprint) {
-      throw new Error('Не указано thumbprint значение сертификата');
-    } else if (typeof thumbprint !== 'string') {
-      throw new Error('Не валидное значение thumbprint сертификата');
+      throw new Error("Не указано thumbprint значение сертификата");
+    } else if (typeof thumbprint !== "string") {
+      throw new Error("Не валидное значение thumbprint сертификата");
     }
     const oStore = await cadescomMethods.oStore();
 
-    await oStore.Open(CAPICOM_CURRENT_USER_STORE, CAPICOM_MY_STORE, CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED);
+    await oStore.Open(
+      CAPICOM_CURRENT_USER_STORE,
+      CAPICOM_MY_STORE,
+      CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED
+    );
 
     const certificates = await oStore.Certificates;
     const count = await certificates.Count;
-    const findCertificate = await certificates.Find(CAPICOM_CERTIFICATE_FIND_SHA1_HASH, thumbprint);
+    const findCertificate = await certificates.Find(
+      CAPICOM_CERTIFICATE_FIND_SHA1_HASH,
+      thumbprint
+    );
     if (count) {
       const certificateItem = await findCertificate.Item(1);
       oStore.Close();
 
       return certificateItem;
     } else {
-      throw new Error(`Произошла ошибка при получении вертификата по thumbprint значению: ${thumbprint}`);
+      throw new Error(
+        `Произошла ошибка при получении вертификата по thumbprint значению: ${thumbprint}`
+      );
     }
   } catch (error) {
     throw new Error(error.message);
@@ -158,9 +183,9 @@ async function currentCadesCert(thumbprint) {
 async function getCert(thumbprint) {
   try {
     if (!thumbprint) {
-      throw new Error('Не указано thumbprint значение сертификата');
-    } else if (typeof thumbprint !== 'string') {
-      throw new Error('Не валидное значение thumbprint сертификата');
+      throw new Error("Не указано thumbprint значение сертификата");
+    } else if (typeof thumbprint !== "string") {
+      throw new Error("Не валидное значение thumbprint сертификата");
     }
 
     const certList = await getCertsList();
@@ -171,7 +196,9 @@ async function getCert(thumbprint) {
       }
     }
 
-    throw new Error(`Не найдено сертификата по thumbprint значению: ${thumbprint}`);
+    throw new Error(
+      `Не найдено сертификата по thumbprint значению: ${thumbprint}`
+    );
   } catch (error) {
     throw new Error(error.message);
   }
@@ -189,9 +216,9 @@ async function getCert(thumbprint) {
 async function signBase64(thumbprint, base64, type = true) {
   try {
     if (!thumbprint) {
-      throw new Error('Не указано thumbprint значение сертификата');
-    } else if (typeof thumbprint !== 'string') {
-      throw new Error('Не валидное значение thumbprint сертификата');
+      throw new Error("Не указано thumbprint значение сертификата");
+    } else if (typeof thumbprint !== "string") {
+      throw new Error("Не валидное значение thumbprint сертификата");
     }
 
     const oAttrs = await cadescomMethods.oAtts();
@@ -246,7 +273,11 @@ async function verifyBase64(signedMessage, base64, type = true) {
  * @throws {Error}
  * @description подписание XML документа
  */
-async function signXml(thumbprint, xml, cadescomXmlSignatureType = CADESCOM_XML_SIGNATURE_TYPE_ENVELOPED) {
+async function signXml(
+  thumbprint,
+  xml,
+  cadescomXmlSignatureType = CADESCOM_XML_SIGNATURE_TYPE_ENVELOPED
+) {
   try {
     const currentCert = await currentCadesCert(thumbprint);
     const publicKey = await currentCert.PublicKey();
@@ -274,12 +305,12 @@ async function signXml(thumbprint, xml, cadescomXmlSignatureType = CADESCOM_XML_
 // NOTE Exports
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-module.exports = {
+export {
   about,
   getCertsList,
   currentCadesCert,
   getCert,
   signXml,
   signBase64,
-  verifyBase64,
+  verifyBase64
 };

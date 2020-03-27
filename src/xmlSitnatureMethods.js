@@ -2,21 +2,25 @@
 // NOTE Imports
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+import  {
+  XML_DSIG_GOST,
+  CADESCOM
+} from ('./constants');
+
 const {
-  XML_DSIG_GOST: {
-    XmlDsigGost2012Url256,
-    XmlDsigGost2012Url256Digest,
-    XmlDsigGost2012Url512,
-    XmlDsigGost2012Url512Digest,
-    XmlDsigGost3410Url,
-    XmlDsigGost3411Url,
-  },
-  CADESCOM: {
-    CADESCOM_XML_SIGNATURE_TYPE_ENVELOPED,
-    CADESCOM_XML_SIGNATURE_TYPE_ENVELOPING,
-    CADESCOM_XML_SIGNATURE_TYPE_TEMPLATE,
-  }
-} = require('./constants');
+  XmlDsigGost2012Url256,
+  XmlDsigGost2012Url256Digest,
+  XmlDsigGost2012Url512,
+  XmlDsigGost2012Url512Digest,
+  XmlDsigGost3410Url,
+  XmlDsigGost3411Url,
+} = XML_DSIG_GOST
+
+const {
+  CADESCOM_XML_SIGNATURE_TYPE_ENVELOPED,
+  CADESCOM_XML_SIGNATURE_TYPE_ENVELOPING,
+  CADESCOM_XML_SIGNATURE_TYPE_TEMPLATE,
+} = CADESCOM;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // NOTE Functions
@@ -99,7 +103,7 @@ function doXmlSitnatureAlgorithm(value) {
 // NOTE Exports
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-module.exports = {
+export {
   doXmlSitnatureType,
   doXmlSitnatureAlgorithm,
 };
